@@ -21,3 +21,135 @@ Access Token (is this a OAuth token?):
 
 Push should now work.
 
+
+== lab container-create
+
+----
+lab container-create start
+
+Setting up workstation for the Guided Exercise: Creating a MySQL database instance
+
+ · Checking podman configuration...............................  SUCCESS
+ · Creating create_table.txt file..............................  SUCCESS
+----
+
+----
+podman run --name mysql-basic \
+ -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 \
+ -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 \
+ -d registry.redhat.io/rhel8/mysql-80:1
+
+Trying to pull registry.redhat.io/rhel8/mysql-80:1...
+Getting image source signatures
+Copying blob ce3c6836540f done
+Copying blob 63f9f4c31162 done
+Copying blob 9b00300fb457 done
+Copying blob d49355ce848e done
+Copying config 3fd7f77614 done
+Writing manifest to image destination
+Storing signatures
+5f9c7d7bcaca1148032bcc5bbe498e9f55fbd506741cf96b8084803fc3038ac4
+----
+
+----
+podman ps --format "{{.ID}} {{.Image}} {{.Names}}"
+5f9c7d7bcaca registry.redhat.io/rhel8/mysql-80:1 mysql-basic
+----
+
+----
+podman exec -l -it bash
+bash-4.4$
+----
+
+----
+uname -a
+Linux 5f9c7d7bcaca 4.18.0-193.14.3.el8_2.x86_64 #1 SMP Mon Jul 20 15:02:29 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+----
+
+----
+env
+MYSQL_PREFIX=/usr
+MYSQL_PASSWORD=mypa55
+CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/mysql
+SUMMARY=MySQL 8.0 SQL database server
+HOSTNAME=
+MYSQL_DATABASE=items
+STI_SCRIPTS_URL=image:///usr/libexec/s2i
+APP_DATA=/opt/app-root/src
+DESCRIPTION=MySQL is a multi-user, multi-threaded SQL database server. The container image provides a containerized packaging of the MySQL mysqld daemon and client application. The mysqld server daemon accepts connections from clients and provides access to content from MySQL databases on behalf of the clients.
+MYSQL_ROOT_PASSWORD=r00tpa55
+container=oci
+PWD=/opt/app-root/src
+HOME=/var/lib/mysql
+MYSQL_USER=user1
+MYSQL_VERSION=8.0
+TERM=xterm
+PLATFORM=el8
+SHLVL=1
+STI_SCRIPTS_PATH=/usr/libexec/s2i
+APP_ROOT=/opt/app-root
+PATH=/opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+_=/usr/bin/env
+----
+
+----
+mysql -u root
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.26 Source distribution
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| items              |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.02 sec)
+
+mysql> 
+mysql> use items
+Database changed
+
+mysql> create table Projects (id int not null, name varchar(255) default null, code varchar(255) default null, primary key (id));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_items |
++-----------------+
+| Projects        |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> insert into Projects (id, name, code) values (1, 'DevOps', 'DO180');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Projects;
++----+--------+-------+
+| id | name   | code  |
++----+--------+-------+
+|  1 | DevOps | DO180 |
++----+--------+-------+
+1 row in set (0.00 sec)
+
+mysql> exit
+Bye
+----
+
+----
+bash-4.4$ exit
+exit
+----
+
