@@ -6,3 +6,18 @@ Login Succeeded!
 ----
 
 # git config --global credential.helper cache
+
+== How to push notes.txt
+
+Use a public repo. For some reason, using a private repo did not work.
+
+Edit the remote in notes/.git/config like this, using your GitHub Personal
+Access Token (is this a OAuth token?):
+
+----
+[remote "origin"]
+        url = https://rblome:<GitHub_Access_Token>@github.com/rblome/notes.git
+----
+
+Push should now work.
+
