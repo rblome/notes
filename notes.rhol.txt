@@ -153,3 +153,14 @@ bash-4.4$ exit
 exit
 ----
 
+----
+lab container-create finish
+
+Completing the Guided Exercise: Creating a MySQL database instance
+
+ · Removing "mysql-basic" container............................  SUCCESS
+ · Removing "registry.redhat.io/rhel8/mysql-80:1" image........  SUCCESS
+----
+
+
+// EOF
