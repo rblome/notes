@@ -1,0 +1,8 @@
+----
+podman login registry.redhat.io
+Username: rainerblome
+Password: 
+Login Succeeded!
+----
+
+# git config --global credential.helper cache
