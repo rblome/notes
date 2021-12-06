@@ -259,22 +259,111 @@ Completing the Guided Exercise: Exploring root and rootless containers
 
 ----
 
+
+== lab container-review
+
 ----
+lab container-review start
+
+Setting up workstation for the Lab: Creating Containerized Services
+
+ · Checking podman configuration...............................  SUCCESS
+ · Setting up labs folder......................................  SUCCESS
+ · Downloading starter project.................................  SUCCESS
+ · Downloading solution project................................  SUCCESS
+
+Setup successful. Please proceed with the exercise.
+
 ----
 
 ----
+podman run  --detach --publish=80 --name httpd-basic quay.io/redhattraining/httpd-parent:2.4
+513474cef2a400d1f1b2325588bead355fbda7efc3346ebc580f75ef3ccdd3b3
+# Hmm, forgot to specify host port for the forwarding.
+# Hm, podman start has no publish option, need to remove container to start from scratch.
+
+podman rm 513474cef2a400d1f1b2325588bead355fbda7efc3346ebc580f75ef3ccdd3b3
+513474cef2a400d1f1b2325588bead355fbda7efc3346ebc580f75ef3ccdd3b3
+
+podman rm 513474cef2a400d1f1b2325588bead355fbda7efc3346ebc580f75ef3ccdd3b3
+Error: no container with name or ID 513474cef2a400d1f1b2325588bead355fbda7efc3346ebc580f75ef3ccdd3b3 found: no such container
+# good
+
+podman run  --detach --publish=8080:80 --name httpd-basic quay.io/redhattraining/httpd-parent:2.4
 ----
 
 ----
+telnet 127.0.0.1 8080
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+GET / HTTP/1.0
+
+HTTP/1.1 200 OK
+Date: Mon, 06 Dec 2021 20:15:10 GMT
+Server: Apache/2.4.37 (Red Hat Enterprise Linux)
+Last-Modified: Wed, 12 Jun 2019 11:58:30 GMT
+ETag: "27-58b1f21bf8580"
+Accept-Ranges: bytes
+Content-Length: 39
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+Hello from the httpd-parent container!
+Connection closed by foreign host.
 ----
 
 ----
+[student@workstation ~]$ curl 127.0.0.1:8080
+Hello from the httpd-parent container!
+
+curl http://localhost:8080
 ----
 
-----
-----
+How to get a container with a modified file?
+
+Intended solution: Log into the container.
+Requires bash in the container.
 
 ----
+podman exec -it -l bash
+----
+
+My attempt:
+
+----
+... --mount=type=bind,src=$HOME/html,dst=/var/www/html
+----
+
+This does not work because SELinux interferes, it doesn't let you access the
+mount source.
+
+This worked:
+
+----
+podman stop -l
+podman rm -l
+podman run -d -p=8080:80 --name httpd-basic -v /home/student/html:/var/www/html:z quay.io/redhattraining/httpd-parent:2.4
+----
+
+The magic `:z` at the end.
+
+----
+lab container-review grade
+
+Grading the student's work for the Lab: Creating Containerized Services
+
+ · The httpd container image was pulled........................  PASS
+ · The container was started with the correct name.............  PASS
+ · The container was started with the correct image............  PASS
+ · Check the content of index.html.............................  PASS
+
+lab container-review finish
+
+Completing the Lab: Creating Containerized Services
+
+ · Removing "httpd-basic" container............................  SUCCESS
+ · Removing "redhattraining/httpd-parent:2.4" image............  SUCCESS
 ----
 
 ----
