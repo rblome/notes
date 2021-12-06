@@ -1,3 +1,5 @@
+== login
+
 ----
 podman login registry.redhat.io
 Username: rainerblome
@@ -6,6 +8,7 @@ Login Succeeded!
 ----
 
 # git config --global credential.helper cache
+
 
 == How to push notes.txt
 
@@ -160,6 +163,142 @@ Completing the Guided Exercise: Creating a MySQL database instance
 
  · Removing "mysql-basic" container............................  SUCCESS
  · Removing "registry.redhat.io/rhel8/mysql-80:1" image........  SUCCESS
+----
+
+
+== lab container-rootless start
+
+----
+lab container-rootless start
+
+Setting up workstation for the Guided Exercise: Exploring root and rootless containers
+
+ · Checking podman configuration...............................  SUCCESS
+----
+
+
+=== rootful container, running as root
+
+`--rm` means remove the container image after use.
+This means that when this image is used the next time it will be redownloaded.
+
+----
+[student@workstation ~]$ sudo podman run --rm --name asroot -it registry.access.redhat.com/ubi8:latest /bin/bash
+Trying to pull registry.access.redhat.com/ubi8:latest...
+Getting image source signatures
+Copying blob 63f9f4c31162 done
+Copying blob ce3c6836540f done
+Copying config cc06568478 done
+Writing manifest to image destination
+Storing signatures
+[root@3734918075e4 /]# 
+
+[root@3734918075e4 /]# whoami
+root
+[root@3734918075e4 /]# id
+uid=0(root) gid=0(root) groups=0(root)
+[root@3734918075e4 /]# sleep 1000
+----
+
+In different terminal:
+
+----
+[student@workstation ~]$ podman ps
+CONTAINER ID  IMAGE  COMMAND  CREATED  STATUS  PORTS  NAMES
+
+[student@workstation ~]$ sudo podman ps
+CONTAINER ID  IMAGE                                   COMMAND    CREATED        STATUS            PORTS  NAMES
+3734918075e4  registry.access.redhat.com/ubi8:latest  /bin/bash  2 minutes ago  Up 2 minutes ago         asroot
+
+[student@workstation ~]$ sudo ps -ef |grep -v grep|grep sleep\ 1000
+root        3377    3337  0 14:30 pts/0    00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 1000
+
+----
+
+Back in terminal with sleeping container:
+
+----
+^C
+[root@3734918075e4 /]# exit
+exit
+[student@workstation ~]$ 
+----
+
+
+=== Running without root
+
+----
+[student@workstation ~]$ podman run --rm --name asuser -it registry.access.redhat.com/ubi8:latest /bin/bash
+Trying to pull registry.access.redhat.com/ubi8:latest...
+Getting image source signatures
+Copying blob 63f9f4c31162 done
+Copying blob ce3c6836540f done
+Copying config cc06568478 done
+Writing manifest to image destination
+Storing signatures
+[root@52194a86c9b4 /]# whoami
+root
+[root@52194a86c9b4 /]# id
+uid=0(root) gid=0(root) groups=0(root)
+[root@52194a86c9b4 /]# sleep 2000
+----
+
+In different terminal:
+
+----
+[student@workstation ~]$ sudo ps -ef |grep -v grep|grep sleep\ 2000
+student     3732    3709  0 14:38 pts/0    00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 2000
+----
+
+Note that the sleep process now runs as student.
+
+----
+lab container-rootless finish
+
+Completing the Guided Exercise: Exploring root and rootless containers
+
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
 ----
 
 
