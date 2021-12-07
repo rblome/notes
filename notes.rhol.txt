@@ -366,6 +366,81 @@ Completing the Lab: Creating Containerized Services
  · Removing "redhattraining/httpd-parent:2.4" image............  SUCCESS
 ----
 
+
+== manage-lifecycle
+
+----
+lab manage-lifecycle start
+
+Setting up workstation for the Guided Excercise: Managing a MySQL Container
+
+ · Checking podman configuration...............................  SUCCESS
+ · Downloading starter project.................................  SUCCESS
+ · Downloading solution project................................  SUCCESS
+
+Setup successful. Please proceed with the exercise.
+
+----
+
+----
+podman login registry.redhat.io
+Username: rainerblome
+Password: $pw_for_r_b@d.i.c
+Login Succeeded!
+----
+
+----
+podman run --name mysql -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 -d registry.redhat.io/rhel8/mysql-80:1
+Trying to pull registry.redhat.io/rhel8/mysql-80:1...
+Getting image source signatures
+Copying blob ce3c6836540f skipped: already exists
+Copying blob 63f9f4c31162 skipped: already exists
+Copying blob 9b00300fb457 done
+Copying blob d49355ce848e done
+Copying config 3fd7f77614 done
+Writing manifest to image destination
+Storing signatures
+080ae630324e32e4acaabe0701bc1de5482f52cc913cf0a71fc36110ba603056
+----
+
+----
+podman ps --format "{{.ID}} {{.Image}} {{.Names}}"
+080ae630324e registry.redhat.io/rhel8/mysql-80:1 mysql
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
+----
+----
+
 ----
 ----
 
