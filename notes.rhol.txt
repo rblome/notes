@@ -409,6 +409,18 @@ podman ps --format "{{.ID}} {{.Image}} {{.Names}}"
 ----
 
 ----
+lab manage-lifecycle finish
+
+Completing the Guided Excercise: Managing a MySQL Container
+
+ · Stopping 'mysql' container..................................  SUCCESS
+ · Stopping 'mysql-2' container................................  SUCCESS
+ · Removing 'mysql' container..................................  SUCCESS
+ · Removing 'mysql-2' container................................  SUCCESS
+ · Removing 'mysql-db' container...............................  SUCCESS
+ · Removing 'registry.redhat.io/rhel8/mysql-80:1' image........  SUCCESS
+ · Removing the project directory..............................  SUCCESS
+ · Removing the solution directory.............................  SUCCESS
 ----
 
 ----
